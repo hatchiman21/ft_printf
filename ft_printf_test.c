@@ -300,27 +300,30 @@ int	special_check(const char *string)
 char	*make_special(const char *string, va_list args, int i)
 {
 	char	*word;
-
+	void	*content;
+	
+	content = va_arg(args, void *);
 	word = NULL;
-	if (string[i] == 'c')
+	if (!content)
+		word = ft_strdup("(null)");
+	else if (string[i] == 'c')
 		word = ft_strdup_char((char)va_arg(args, int));
 	else if (string[i] == 's')
-		word = ft_strdup(va_arg(args, char *));
+		word = ft_strdup((char *)content);
 	else if (string[i] == 'p')
 	{
 		write (1, "0x", 2);
-		word = ft_itoa_hex(va_arg(args, long unsigned int), 3);
+		word = ft_itoa_hex((long unsigned int)content, 3);
 	}
 	else if (string[i] == 'd' || string[i] == 'i' || string[i] == 'u')
-		word = ft_itoa(va_arg(args, long long int));
+		word = ft_itoa((long long int)content);
 	else if (string[i] == 'x')
-		word = ft_itoa_hex(va_arg(args, long long int), 1);
+		word = ft_itoa_hex((long long int)content, 1);
 	else if (string[i] == 'X')
-		word = ft_itoa_hex(va_arg(args, long long int), 2);
+		word = ft_itoa_hex((long long int)content, 2);
 	else if (string[i] == '%')
 		word = ft_strdup("%");
 	return (word);
-	
 }
 static void	del(void * the_content)
 {
@@ -390,6 +393,6 @@ int	ft_printf(const char *string, ...)
 
 int	main()
 {
-ft_printf("asdas,jdnlkasd");
+ft_printf(" NULL NULL ");
 	return 0;
 }
