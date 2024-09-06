@@ -307,7 +307,7 @@ char	*make_special(const char *string, va_list args, int i)
 	if (!content)
 		word = ft_strdup("(null)");
 	else if (string[i] == 'c')
-		word = ft_strdup_char((char)va_arg(args, int));
+		word = ft_strdup_char((char)content);
 	else if (string[i] == 's')
 		word = ft_strdup((char *)content);
 	else if (string[i] == 'p')
@@ -327,7 +327,7 @@ char	*make_special(const char *string, va_list args, int i)
 }
 static void	del(void * the_content)
 {
-	ft_bzero(the_content, ft_strlen((char *)the_content));
+	free (the_content);
 }
 
 int	print_list(t_list *result)
@@ -393,6 +393,6 @@ int	ft_printf(const char *string, ...)
 
 int	main()
 {
-ft_printf(" NULL NULL ");
+ft_printf("%s","");
 	return 0;
 }

@@ -14,7 +14,7 @@
 
 static long long int	allocation(long long int n, char **res)
 {
-	long long int			i;
+	long long int	i;
 
 	i = 1;
 	if (n < 0)
