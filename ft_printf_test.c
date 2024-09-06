@@ -285,7 +285,10 @@ char	*ft_strdup_char(const char s)
 	res[1] = '\0';
 	return (res);
 }
-
+static void	del(void * the_content)
+{
+	free (the_content);
+}
 int	special_check(const char *string)
 {
 	string++;
@@ -295,7 +298,6 @@ int	special_check(const char *string)
 		return (1);
 	return (0);
 }
-
 
 char	*make_special(const char *string, va_list args, int i)
 {
@@ -311,10 +313,7 @@ char	*make_special(const char *string, va_list args, int i)
 	else if (string[i] == 's')
 		word = ft_strdup((char *)content);
 	else if (string[i] == 'p')
-	{
-		write (1, "0x", 2);
 		word = ft_itoa_hex((long unsigned int)content, 3);
-	}
 	else if (string[i] == 'd' || string[i] == 'i' || string[i] == 'u')
 		word = ft_itoa((long long int)content);
 	else if (string[i] == 'x')
@@ -324,10 +323,6 @@ char	*make_special(const char *string, va_list args, int i)
 	else if (string[i] == '%')
 		word = ft_strdup("%");
 	return (word);
-}
-static void	del(void * the_content)
-{
-	free (the_content);
 }
 
 int	print_list(t_list *result)
