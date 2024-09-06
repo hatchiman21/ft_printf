@@ -1,21 +1,15 @@
 #include "ft_printf.h"
 
-
-static long long int	allocation_hex(long long int n, char **res, int fd)
+static long long int	allocation_hex(unsigned long long int n, char **res, int fd)
 {
 	long long int			i;
 
 	i = 1;
-	if (n < 0)
-	{
-		i++;
-		n *= -1;
-	}
-	else if (n == 0)
+	if (n == 0)
 		i++;
 	while (n > 0)
 	{
-		n /= 10;
+		n /= 16;
 		i++;
 	}
 	if (fd != 3)
@@ -25,7 +19,7 @@ static long long int	allocation_hex(long long int n, char **res, int fd)
 	return (i - 1);
 }
 
-static char	*ft_itoa_hex_step(long long int m,int fd, int i, char *res)
+static char	*ft_itoa_hex_step(unsigned long long int m,int fd, int i, char *res)
 {
 	while (m > 0)
 	{
@@ -40,7 +34,7 @@ static char	*ft_itoa_hex_step(long long int m,int fd, int i, char *res)
 	return (res);
 }
 
-char	*ft_itoa_hex(long long int n,int fd)
+char	*ft_itoa_hex(unsigned long long int n,int fd)
 {
 	char		*res;
 	long long int			i;
@@ -52,11 +46,6 @@ char	*ft_itoa_hex(long long int n,int fd)
 	{
 		res[0] = '0';
 		res[1] = 'x';
-	}
-	if (n < 0)
-	{
-		n *= -1;
-		res[0] = '-';
 	}
 	res[i--] = '\0';
 	if (n == 0)
@@ -77,6 +66,11 @@ char	*ft_strdup_char(const char s)
 	return (res);
 }
 
+static void	del(void * the_content)
+{
+	free (the_content);
+}
+
 int	special_check(const char *string)
 {
 	string++;
@@ -87,40 +81,36 @@ int	special_check(const char *string)
 	return (0);
 }
 
+static char	*empty_check(char *string)
+{
+	if (!string)
+		return ("(null)");
+	else
+		return (string);
+}
 
 char	*make_special(const char *string, va_list args, int i)
 {
-	char	*word;
-	void	*content;
-	
-	content = va_arg(args, void *);
+	char *word;
+
 	word = NULL;
-	if (!content)
-		word = ft_strdup("(null)");
-	else if (string[i] == 'c')
+	if (string[i] == 'c')
 		word = ft_strdup_char((char)va_arg(args, int));
 	else if (string[i] == 's')
-		word = ft_strdup((char *)content);
+		word = ft_strdup(empty_check(va_arg(args, char *)));
 	else if (string[i] == 'p')
-	{
-		write (1, "0x", 2);
-		word = ft_itoa_hex((long unsigned int)content, 3);
-	}
-	else if (string[i] == 'd' || string[i] == 'i' || string[i] == 'u')
-		word = ft_itoa((long long int)content);
+		word = ft_itoa_hex((uintptr_t)va_arg(args, void *), 3);
+	else if (string[i] == 'd' || string[i] == 'i')
+		word = ft_itoa(va_arg(args, int));
+	else if (string[i] == 'u')
+		word = ft_itoa(va_arg(args, unsigned int));
 	else if (string[i] == 'x')
-		word = ft_itoa_hex((long long int)content, 1);
+		word = ft_itoa_hex(va_arg(args, unsigned int), 1);
 	else if (string[i] == 'X')
-		word = ft_itoa_hex((long long int)content, 2);
+		word = ft_itoa_hex(va_arg(args, unsigned int), 2);
 	else if (string[i] == '%')
 		word = ft_strdup("%");
 	return (word);
-}
-static void	del(void * the_content)
-{
-	if 	(the_content)
-		return ;
-	free (the_content);
 }
 
 int	print_list(t_list *result)
@@ -164,7 +154,6 @@ t_list	*allocation_main(const char *string, va_list args, t_list *result)
 	}
 	return (result);
 }
-
 
 int	ft_printf(const char *string, ...)
 {
