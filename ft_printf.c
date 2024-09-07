@@ -12,10 +12,10 @@ static unsigned long int	allocation_hex(unsigned long int n, char **res, int fd)
 		n /= 16;
 		i++;
 	}
-	if (fd != 3)
-		*res = (char *)malloc(sizeof(char) * (i + 1));
-	else
+	if (fd == 3)
 		*res = (char *)malloc(sizeof(char) * (i + 3));
+	else
+		*res = (char *)malloc(sizeof(char) * (i + 1));
 	return (i - 1);
 }
 
