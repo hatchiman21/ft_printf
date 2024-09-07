@@ -1,8 +1,8 @@
 #include "ft_printf.h"
 
-static long long int	allocation_hex(unsigned long long int n, char **res, int fd)
+static unsigned long int	allocation_hex(unsigned long int n, char **res, int fd)
 {
-	long long int	i;
+	unsigned long int	i;
 
 	i = 1;
 	if (n == 0)
@@ -19,7 +19,7 @@ static long long int	allocation_hex(unsigned long long int n, char **res, int fd
 	return (i - 1);
 }
 
-static char	*ft_itoa_hex_step(unsigned long long int m,int fd, int i, char *res)
+static char	*ft_itoa_hex_step(unsigned long int m,int fd, int i, char *res)
 {
 	while (m > 0)
 	{
@@ -34,10 +34,10 @@ static char	*ft_itoa_hex_step(unsigned long long int m,int fd, int i, char *res)
 	return (res);
 }
 
-char	*ft_itoa_hex(unsigned long long int n,int fd)
+char	*ft_itoa_hex(unsigned long int n,int fd)
 {
 	char		*res;
-	long long int			i;
+	unsigned long int		i;
 
 	i = allocation_hex(n, &res, fd);
 	if (res == NULL)
