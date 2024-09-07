@@ -267,18 +267,6 @@ char	*ft_itoa_hex(unsigned long long int n,int fd)
 	return (res);
 }
 
-char	*ft_strdup_char(const char s)
-{
-	char	*res;
-
-	res = (char *)malloc(sizeof(char) * (2));
-	if (res == NULL)
-		return (NULL);
-	res[0] = s;
-	res[1] = '\0';
-	return (res);
-}
-
 static void	del(void * the_content)
 {
 	free (the_content);
@@ -302,13 +290,18 @@ static char	*empty_check(char *string)
 		return (string);
 }
 
+
 char	*make_special(const char *string, va_list args, int i)
 {
 	char *word;
+	char	c;
 
 	word = NULL;
 	if (string[i] == 'c')
-		word = ft_strdup_char((char)va_arg(args, int));
+	{
+		c = va_arg(args, int);
+		word = ft_strdup_char(&c);
+	}
 	else if (string[i] == 's')
 		word = ft_strdup(empty_check(va_arg(args, char *)));
 	else if (string[i] == 'p')
