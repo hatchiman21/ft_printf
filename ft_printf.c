@@ -2,7 +2,7 @@
 
 static long long int	allocation_hex(unsigned long long int n, char **res, int fd)
 {
-	long long int			i;
+	long long int	i;
 
 	i = 1;
 	if (n == 0)
@@ -107,15 +107,19 @@ char	*make_special(const char *string, va_list args, int i)
 
 int	print_list(t_list *result)
 {
-	t_list	*temp;
 	int		i;
+	int		j;
+	t_list	*temp;
 
 	temp = result;
 	i = 0;
 	while (temp)
 	{
+		j = i;
 		ft_putstr_fd((char *)temp->content, 1);
 		i += ft_strlen((char *)temp->content);
+		if (j == i)
+			i++;
 		temp = temp->next;
 	}
 	ft_lstclear(&result, del);
@@ -124,9 +128,9 @@ int	print_list(t_list *result)
 
 t_list	*allocation_main(const char *string, va_list args, t_list *result)
 {
+	int		j;
 	int		i;
 	t_list	*word;
-	int		j;
 
 	i = 0;
 	word = NULL;
@@ -149,8 +153,8 @@ t_list	*allocation_main(const char *string, va_list args, t_list *result)
 
 int	ft_printf(const char *string, ...)
 {
-	va_list		args;
 	int			i;
+	va_list		args;
 	t_list		*result;
 
 	if (!string)
