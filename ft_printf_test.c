@@ -300,7 +300,7 @@ char	*make_special(const char *string, va_list args, int i)
 	if (string[i] == 'c')
 	{
 		c = va_arg(args, int);
-		word = ft_strdup_char(&c);
+		word = ft_strdup(&c);
 	}
 	else if (string[i] == 's')
 		word = ft_strdup(empty_check(va_arg(args, char *)));
