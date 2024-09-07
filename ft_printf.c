@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 #include "ft_printf.h"
 
+static int	special_check(const char *string)
+{
+	string++;
+	if (*string == 'c' || *string == 's' || *string == 'p'
+		|| *string == 'd' || *string == 'i' || *string == 'u'
+		|| *string == 'x' || *string == 'X' || *string == '%')
+		return (1);
+	return (0);
+}
+
 static void	del(void *the_content)
 {
 	free (the_content);

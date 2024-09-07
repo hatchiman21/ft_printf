@@ -78,6 +78,11 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+
+char	*ft_itoa_hex(unsigned long int n, int fd);
+char	*make_special(const char *string, va_list args, int i, int **count);
 int		ft_printf(const char *string, ...);
+
 
 #endif
