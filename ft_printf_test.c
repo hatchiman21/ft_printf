@@ -212,10 +212,9 @@ char	*ft_itoa(long long int n)
 	return (res);
 }
 
-
 static long long int	allocation_hex(unsigned long long int n, char **res, int fd)
 {
-	long long int			i;
+	long long int	i;
 
 	i = 1;
 	if (n == 0)
@@ -225,10 +224,10 @@ static long long int	allocation_hex(unsigned long long int n, char **res, int fd
 		n /= 16;
 		i++;
 	}
-	if (fd == 3)
-		*res = (char *)malloc(sizeof(char) * (i + 3));
-	else
+	if (fd != 3)
 		*res = (char *)malloc(sizeof(char) * (i + 1));
+	else
+		*res = (char *)malloc(sizeof(char) * (i + 3));
 	return (i - 1);
 }
 
@@ -290,7 +289,6 @@ static char	*empty_check(char *string)
 		return (string);
 }
 
-
 char	*make_special(const char *string, va_list args, int i)
 {
 	char *word;
@@ -321,15 +319,19 @@ char	*make_special(const char *string, va_list args, int i)
 
 int	print_list(t_list *result)
 {
-	t_list	*temp;
 	int		i;
+	int		j;
+	t_list	*temp;
 
 	temp = result;
 	i = 0;
 	while (temp)
 	{
+		j = i;
 		ft_putstr_fd((char *)temp->content, 1);
 		i += ft_strlen((char *)temp->content);
+		if (j == i)
+			i++;
 		temp = temp->next;
 	}
 	ft_lstclear(&result, del);
@@ -338,9 +340,9 @@ int	print_list(t_list *result)
 
 t_list	*allocation_main(const char *string, va_list args, t_list *result)
 {
+	int		j;
 	int		i;
 	t_list	*word;
-	int		j;
 
 	i = 0;
 	word = NULL;
@@ -363,8 +365,8 @@ t_list	*allocation_main(const char *string, va_list args, t_list *result)
 
 int	ft_printf(const char *string, ...)
 {
-	va_list		args;
 	int			i;
+	va_list		args;
 	t_list		*result;
 
 	if (!string)
@@ -377,6 +379,7 @@ int	ft_printf(const char *string, ...)
 	i = print_list(result);
 	return (i);
 }
+
 int	main()
 {
 ft_printf("%s","");
