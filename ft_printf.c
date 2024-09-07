@@ -1,135 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aatieh <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/07 18:35:52 by aatieh            #+#    #+#             */
+/*   Updated: 2024/09/07 18:35:57 by aatieh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "ft_printf.h"
 
-static unsigned long int	allocation_hex(unsigned long int n, char **res, int fd)
-{
-	unsigned long int	i;
-
-	i = 1;
-	if (n == 0)
-		i++;
-	while (n > 0)
-	{
-		n /= 16;
-		i++;
-	}
-	if (fd == 3)
-	{
-		*res = (char *)malloc(sizeof(char) * (i + 2));
-		return (i + 1);
-	}
-	else
-		*res = (char *)malloc(sizeof(char) * i);
-	return (i - 1);
-}
-
-static char	*ft_itoa_hex_step(unsigned long int m,int fd, int i, char *res)
-{
-	while (m > 0)
-	{
-		if ((m % 16) < 10)
-			res[i--] = (m % 16) + '0';
-		else if (fd == 1 || fd == 3)
-			res[i--] = (m % 16) - 10 + 'a';
-		else if (fd == 2)
-			res[i--] = (m % 16) - 10 + 'A';
-		m /= 16;
-	}
-	return (res);
-}
-
-char	*ft_itoa_hex(unsigned long int n,int fd)
-{
-	char		*res;
-	unsigned long int		i;
-
-	i = allocation_hex(n, &res, fd);
-	if (res == NULL)
-		return (NULL);
-	if (fd == 3)
-	{
-		res[0] = '0';
-		res[1] = 'x';
-	}
-	res[i--] = '\0';
-	if (n == 0)
-		res[i] = '0';
-	res = ft_itoa_hex_step(n, fd, i, res);
-	return (res);
-}
-
-static void	del(void * the_content)
+static void	del(void *the_content)
 {
 	free (the_content);
 }
 
-int	special_check(const char *string)
-{
-	string++;
-	if (*string == 'c' || *string == 's' || *string == 'p'
-		|| *string == 'd' || *string == 'i' || *string == 'u'
-				|| *string == 'x' || *string == 'X' || *string == '%')
-		return (1);
-	return (0);
-}
-
-static char	*empty_check(char *string)
-{
-	if (!string)
-		return ("(null)");
-	else
-		return (string);
-}
-
-char	*make_special(const char *string, va_list args, int i)
-{
-	char *word;
-	char	c;
-
-	word = NULL;
-	if (string[i] == 'c')
-	{
-		c = va_arg(args, int);
-		word = ft_strdup(&c);
-	}
-	else if (string[i] == 's')
-		word = ft_strdup(empty_check(va_arg(args, char *)));
-	else if (string[i] == 'p')
-		word = ft_itoa_hex((uintptr_t)va_arg(args, void *), 3);
-	else if (string[i] == 'd' || string[i] == 'i')
-		word = ft_itoa(va_arg(args, int));
-	else if (string[i] == 'u')
-		word = ft_itoa(va_arg(args, unsigned int));
-	else if (string[i] == 'x')
-		word = ft_itoa_hex(va_arg(args, unsigned int), 1);
-	else if (string[i] == 'X')
-		word = ft_itoa_hex(va_arg(args, unsigned int), 2);
-	else if (string[i] == '%')
-		word = ft_strdup("%");
-	return (word);
-}
-
-int	print_list(t_list *result)
+static int	print_list(t_list *result)
 {
 	int		i;
-	int		j;
 	t_list	*temp;
 
 	temp = result;
 	i = 0;
 	while (temp)
 	{
-		j = i;
 		ft_putstr_fd((char *)temp->content, 1);
 		i += ft_strlen((char *)temp->content);
-		if (j == i)
-			i++;
 		temp = temp->next;
 	}
 	ft_lstclear(&result, del);
 	return (i);
 }
 
-t_list	*allocation_main(const char *string, va_list args, t_list *result)
+static t_list	*allocation_main(const char *string, va_list args,
+	t_list *result, int *count)
 {
 	int		j;
 	int		i;
@@ -140,13 +45,16 @@ t_list	*allocation_main(const char *string, va_list args, t_list *result)
 	while (string[i])
 	{
 		j = i;
-		while(string[i] && (string[i] != '%' || !special_check(string +i)))
+		while (string[i] && (string[i] != '%' || !special_check(string + i)))
 			i++;
-		word= ft_lstnew(ft_substr(string, j, (i - j)));
-		ft_lstadd_back(&result, word);
+		if (j != i)
+		{
+			word = ft_lstnew(ft_substr(string, j, (i - j)));
+			ft_lstadd_back(&result, word);
+		}
 		if (string[i] == '%' && special_check(string + i))
 		{
-			word = ft_lstnew(make_special(string, args, i + 1));
+			word = ft_lstnew(make_special(string, args, i + 1, &count));
 			ft_lstadd_back(&result, word);
 			i += 2;
 		}
@@ -157,16 +65,17 @@ t_list	*allocation_main(const char *string, va_list args, t_list *result)
 int	ft_printf(const char *string, ...)
 {
 	int			i;
+	int			count;
 	va_list		args;
 	t_list		*result;
 
 	if (!string)
 		return (0);
+	count = 0;
 	result = NULL;
 	va_start (args, string);
-	result = allocation_main(string, args, result);
+	result = allocation_main(string, args, result, &count);
 	va_end(args);
-	
-	i = print_list(result);
+	i = print_list(result) + count;
 	return (i);
 }

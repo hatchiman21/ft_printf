@@ -35,7 +35,7 @@ static long long int	allocation(long long int n, char **res)
 
 char	*ft_itoa(long long int n)
 {
-	char		*res;
+	char					*res;
 	long long int			i;
 
 	i = allocation(n, &res);
