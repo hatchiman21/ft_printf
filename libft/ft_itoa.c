@@ -12,47 +12,51 @@
 
 #include "libft.h"
 
-static long long int	allocation(long long int n, char **res)
+static int	allocation(int n, char **res)
 {
-	long long int	i;
+	int			i;
+	long int	temp;
 
 	i = 1;
-	if (n < 0)
+	temp = n;
+	if (temp < 0)
 	{
 		i++;
-		n *= -1;
+		temp *= -1;
 	}
-	else if (n == 0)
+	else if (temp == 0)
 		i++;
-	while (n > 0)
+	while (temp > 0)
 	{
-		n /= 10;
+		temp /= 10;
 		i++;
 	}
 	*res = (char *)malloc(sizeof(char) * i);
 	return (i - 1);
 }
 
-char	*ft_itoa(long long int n)
+char	*ft_itoa(int n)
 {
-	char					*res;
-	long long int			i;
+	char		*res;
+	int			i;
+	long int	temp;
 
 	i = allocation(n, &res);
 	if (res == NULL)
 		return (NULL);
+	temp = n;
 	if (n < 0)
 	{
-		n *= -1;
+		temp *= -1;
 		res[0] = '-';
 	}
 	res[i--] = '\0';
-	if (n == 0)
+	if (temp == 0)
 		res[i] = '0';
-	while (n > 0)
+	while (temp > 0)
 	{
-		res[i--] = (n % 10) + '0';
-		n /= 10;
+		res[i--] = (temp % 10) + '0';
+		temp /= 10;
 	}
 	return (res);
 }

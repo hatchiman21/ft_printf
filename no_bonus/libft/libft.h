@@ -1,34 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aatieh <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 14:38:11 by aatieh            #+#    #+#             */
-/*   Updated: 2024/08/28 16:01:40 by aatieh           ###   ########.fr       */
+/*   Created: 2024/09/03 03:59:10 by aatieh            #+#    #+#             */
+/*   Updated: 2024/09/03 03:59:12 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef LIBFT_H
+# define LIBFT_H
 
-char	*ft_strdup(const char *s)
-{
-	char	*res;
-	int		i;
+# include <unistd.h>
+# include <stdlib.h>
+# include <stddef.h>
+# include <stdarg.h>
 
-	i = 0;
-	while (s[i])
-		i++;
-	res = (char *)malloc(sizeof(char) * (i + 1));
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		res[i] = s[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
-}
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+
+#endif
