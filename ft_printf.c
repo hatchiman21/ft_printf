@@ -24,18 +24,15 @@ int	ft_putstr_fd_n(char *s, int n, int fd)
 	return (i);
 }
 
-// static int	special_check(char *string)
-// {
-// 	string++;
-	// if (*string == ' ' || *string == '#' || *string == '-'
-	// 	|| *string == '0' || *string == '.' || *string == '+')
-// 		string++;
-// 	if (*string == 'c' || *string == 's' || *string == 'p'
-// 		|| *string == 'd' || *string == 'i' || *string == 'u'
-// 		|| *string == 'x' || *string == 'X' || *string == '%')
-// 		return (1);
-// 	return (0);
-// }
+static int	special_check(char *string)
+{
+	string++;
+	if (*string == 'c' || *string == 's' || *string == 'p'
+		|| *string == 'd' || *string == 'i' || *string == 'u'
+		|| *string == 'x' || *string == 'X' || *string == '%')
+		return (1);
+	return (0);
+}
 
 static int	print_main(char *string, va_list args)
 {
@@ -48,11 +45,11 @@ static int	print_main(char *string, va_list args)
 	while (string[i])
 	{
 		j = i;
-		while (string[i] && (string[i] != '%'))
+		while (string[i] && (string[i] != '%' || !special_check(string + i)))
 			i++;
 		if (j != i)
 			count += ft_putstr_fd_n((string + j), (i - j), 1);
-		if (string[i] == '%')
+		if (string[i] == '%' && special_check(string + i))
 		{
 			count += print_special(string, args, i + 1);
 			i += 2;

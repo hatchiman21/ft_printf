@@ -12,20 +12,6 @@
 
 #include "ft_printf.h"
 
-static int skip(char *string, int i)
-{
-	if (string[i] == '-' || string[i] == '0' || string[i] == '.')
-	{
-		i++;
-		if (ft_isalnum(string[i]))
-			i++;
-	}
-	else if ( string[i] == '#'  || string[i] == '+' || string[i] == ' '
-		|| ft_isalnum(string[i]))
-	i++;
-	return (i);
-}
-
 static char	*empty_check(char *string)
 {
 	if (!string)
@@ -36,7 +22,6 @@ static char	*empty_check(char *string)
 static int	print_special_step(char *string, va_list args,
 	int i, int count)
 {
-	i = skip(string, i);
 	if (string[i] == 'd' || string[i] == 'i')
 		count += ft_putnbr(va_arg(args, int), 0);
 	else if (string[i] == 'u')
