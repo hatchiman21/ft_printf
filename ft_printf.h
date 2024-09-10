@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <stdint.h>
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_itoa_hex(unsigned long int n, int fd);
 int		print_special(char *string, va_list args, int i);
 int		ft_putnbr(long long int m, int i);
