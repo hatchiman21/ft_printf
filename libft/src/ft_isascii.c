@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aatieh <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aatieh <aatieh@student.42amman.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 03:59:10 by aatieh            #+#    #+#             */
-/*   Updated: 2024/09/03 03:59:12 by aatieh           ###   ########.fr       */
+/*   Created: 2024/08/28 14:34:03 by aatieh            #+#    #+#             */
+/*   Updated: 2024/12/25 21:08:49 by aatieh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "../inc/libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stddef.h>
-# include <stdarg.h>
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-
-#endif
+int	ft_isascii(int c)
+{
+	if (c <= 127 && c >= 0)
+		c = 1;
+	else
+		c = 0;
+	return (c);
+}

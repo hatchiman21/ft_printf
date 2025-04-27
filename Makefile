@@ -1,12 +1,15 @@
-LIBFT_DIR = ./libft
+LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = ft_printf.c ft_itoa_hex.c ft_put.c print_special.c
-OBJS = $(SRCS:.c=.o)
+OBJS_DIR = obj
+SRCS_DIR = src
+
+SRCS = ft_printf.c ft_printf_special.c ft_printf_utils.c
+SRCS := $(addprefix $(SRCS_DIR)/, $(SRCS))
+OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I.
-
 NAME = libftprintf.a
 
 all: $(LIBFT) $(NAME)
@@ -14,15 +17,18 @@ all: $(LIBFT) $(NAME)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
-	ar rcs $(NAME) $(LIBFT_DIR)/*.o
+$(NAME): $(OBJS) inc/ft_printf.h
+	cp $(LIBFT) $(NAME)
+	ar rcs $(NAME) $(OBJS) 
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJS_DIR)
+			$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJS_DIR):
+			@mkdir -p $(OBJS_DIR)
 
 clean:
-	$(RM) $(OBJS)
+	rm -rf $(OBJS_DIR)
 	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
